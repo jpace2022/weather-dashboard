@@ -1,49 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"/>
     <link rel="stylesheet" href="./assets/css/style.css" />
+    <title>Weather Dashboard</title>
 </head>
+
 <body>
-  
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-          <h1 class="display-4">Weather App</h1>
+    <div id="header" class="jumbotron jumbotron-fluid text-container">
+          <h1 id="header-text" class="display-4">Weather Dashboard</h1>
         </div>
       </div>
-      <nav class="navbar bg-light">
-        <div class="container-fluid">
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" id="seachedcity" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" id="btn" type="submit">Search</button>
-          </form>
-        </div>
-      </nav>
-    <div class="container text-center">
-        <div class="row">
-          <div class="col" id="cityname">
-            Column
+
+        <div id="content" class="container-fluid">
+          <div class="row">
+            <div id="content-left" class="col-md-3">
+              <form> 
+                <label for="search-city">Search for City:</label>
+                <div class="form-row">
+                  <input id="search-city" class="form-control" name="city" value=""></div></input>
+            <button id="search-button" class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
           </div>
-          <div class="col">
-            Column
-          </div>
-          <div class="col">
-            Column
-          </div>
-          <div class="col">
-            Column
-          </div>
-          <div class="col">
-            Column
-          </div>
-        </div>
-      </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        </form>
+
+        <div id="search-error"></div>
+        <ul id="city-results" class="list-group mt-4"></ul>
+        <a id="clear-storage" href="#"></a>
+    </div>
+
+    <div id="content-right" class="col-md-9 pt-4">
+    <div id="current-weather" class="border rounded"></div>
+    <div id="five-day-forecast" class="mt-5"></div>
+
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
 </html>
