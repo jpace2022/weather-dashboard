@@ -1,11 +1,11 @@
-var APIKey = "5c7da5f467f265d217d697fd33c652b3";
+var APIkey = "5c7da5f467f265d217d697fd33c652b3";
 
 var currentCity = "";
 
 var lastCity = "";
 
 var handleErrors = (response) => {
-    if (!resposne.ok) {
+    if (!response.ok) {
         throw Error(response.statusText);
     }
     return response;
@@ -15,7 +15,7 @@ var getCurrentConditions = (event) => {
     let city = $("#search-city").val();
     currentCity = $("#search-city").val();
 
-    let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial" + "&appid=" + APIKey;
+    let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial" + "&appid=" + APIkey;
     fetch(queryURL)
     .then(handleErrors)
     .then((response) => {
@@ -23,12 +23,12 @@ var getCurrentConditions = (event) => {
     })
     .then((response) => {
         saveCity(city);
-        $("#search-error").text("");
-        let currentWeatherIcon="https://openweathermap.org/img/w/" + resposne.weather[0].icon + ".png";
-        let currentTimePt = response.dt;
-        let currentTimeZoneOffSet = response.timezone;
-        let currentTimeZoneOffSetHours = currentTimeZoneOffSet / 60 / 60;
-        let currentMoment = moment.unix(currentTimePt).pt().ptOffSet(currentTimeZoneOffSetHours);
+        $('#search-error').text("")
+        let currentWeatherIcon="https://openweathermap.org/img/w/" + response.weather[0].icon + "png";
+        let currentTimeUTC = response.dt;
+        let currentTimeZoneOffset = response.timezone;
+        let currentTimeZoneOffsetHours = currentTimeZoneOffset / 60 / 60;
+        let currentMoment = moment.unix(currentTimeUTC).utc().utcOffset(currentTimeZoneOffsetHours)
 
         renderCities();
 
@@ -47,7 +47,7 @@ var getCurrentConditions = (event) => {
 
         let latitude = response.coord.lat;
         let longitude = response.coord.lon;
-        let uvQueryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + latitude + "&lon=" + longitude  + "&appid=" + APIKey;
+        let uvQueryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + latitude + "&lon=" + longitude  + "&appid=" + APIkey;
 
         fetch(uvQueryURL)
         .then(handleErrors)
@@ -69,37 +69,42 @@ var getCurrentConditions = (event) => {
 }
 
 var getFiveDayForecast = (event) => {
-    let city = $("#search-city").val();
-    let queryURL = "https://api.openweathermap.org/data/2.5/forcast?q=" + city + "&units=imperial" + "&appid=" + APIKey;
+
+    let city = $('#search-city').val();
+
+    let queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial" + "&appid=" + APIkey;
     fetch(queryURL)
-    .then(handleErrors)
-    .then((response) => {
-        return response.json();
-    })
-    .then((response) => {
+        .then(handleErrors)
+        .then((response) => {
+            return response.json();
+        })
+        .then((response) => {
+            
         let fiveDayForecastHTML = `
         <h2>5-Day Forecast:</h2>
         <div id="fiveDayForecastUl" class="d-inline-flex flex-wrap">`;
+
         for (let i = 0; i < response.list.length; i++) {
             let dayData = response.list[i];
-            let dayTimePT = dayData.dt;
-            let timeZoneOffSet = response.city.timezone;
-            let timeZoneOffSetHours = timeZoneOffSet / 60 / 60;
-            let thisMoment = moment.unix(dayTimePT).pt().ptOffSet(timeZoneOffSetHours);
+            let dayTimeUTC = dayData.dt;
+            let timeZoneOffset = response.city.timezone;
+            let timeZoneOffsetHours = timeZoneOffset / 60 / 60;
+            let thisMoment = moment.unix(dayTimeUTC).utc().utcOffset(timeZoneOffsetHours);
             let iconURL = "https://openweathermap.org/img/w/" + dayData.weather[0].icon + ".png";
+            
 
-            if (thisMoment.format("HH:mm:ss") === "11:00:00" || thisMoment.format("HH:mm:ss") === "12:00:00" || thisMoment.format("HH:mm:ss") === "13:00:00") {
-                fiveDayForecastHTML += `
-                <div class="weather-card card m-2 p0">
-                <ul class="list-unstyled p-3">
-                    <li>${thisMoment.format("MM/DD/YY")}</li>
-                    <li class="weather-icon"><img src="${iconURL}"></li>
-                    <li>Temp: ${dayData.main.temp}&#8457;</li>
-                    <br>
-                    <li>Humidity: ${dayData.main.humidity}%</li>
-                </ul>
-                </div>`;
-            }
+             if (thisMoment.format("HH:mm:ss") === "11:00:00" || thisMoment.format("HH:mm:ss") === "12:00:00" || thisMoment.format("HH:mm:ss") === "13:00:00") {
+                 fiveDayForecastHTML += `
+                 <div class="weather-card card m-2 p0">
+                 <ul class="list-unstyled p-3">
+                     <li>${thisMoment.format("MM/DD/YY")}</li>
+                     <li class="weather-icon"><img src="${iconURL}"></li>
+                     <li>Temp: ${dayData.main.temp}&#8457;</li>
+                     <br>
+                     <li>Humidity: ${dayData.main.humidity}%</li>
+                 </ul>
+                 </div>`;
+             }
             
         }
 
@@ -109,15 +114,16 @@ var getFiveDayForecast = (event) => {
 }
 
 var saveCity = (newCity) => {
-    let cityExist = false; 
+    let cityExists = false; 
+
     for (let i = 0; i < localStorage.length; i++) {
         if (localStorage["cities" + i] === newCity) {
-            cityExist = true;
+            cityExists = true;
             break;
         }
     }
-    if (cityExist === false) {
-        localStorage.setItem("city" + localStorage.length, newCity)
+    if (cityExists === false) {
+        localStorage.setItem("cities" + localStorage.length, newCity)
     }
 }
 
@@ -147,7 +153,7 @@ var renderCities = () => {
                 $("#city-results").prepend(cityEl)
             }
             if (localStorage.length>0) {
-                $("#clear-storage").html($(<a id="clear-storage" href="#">clear</a>));
+                $("#clear-storage").html('<a id="clear-storage" href="#">clear</a>');
             } else {
                 $("#clear-storage").html("");
             }
