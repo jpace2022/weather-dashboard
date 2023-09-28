@@ -1,4 +1,5 @@
 var APIkey = "5c7da5f467f265d217d697fd33c652b3";
+var APIkey = "7ddabd3e785c14337e0d64e385bbf580"
 
 var currentCity = "";
 
